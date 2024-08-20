@@ -38,6 +38,8 @@ dependencies:
   go_router: ^14.2.3
   provider: ^6.1.2
   http: ^1.2.2
+  csv: ^6.0.0
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:

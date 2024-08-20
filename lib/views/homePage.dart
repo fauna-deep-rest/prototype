@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fauna_prototype/services/navigation.dart';
 import 'package:provider/provider.dart';
-import 'package:fauna_prototype/services/assistant.dart';
+import 'package:fauna_prototype/services/agents/buddy.dart';
+import 'package:fauna_prototype/services/chatservice.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState  extends State<HomePage> {
   final TextEditingController _controller = TextEditingController();
   final ChatService _chatService = ChatService();
+  final BuddyService _buddyService = BuddyService();
   String buddyMessage = 'Hi';
 
   @override
@@ -48,9 +50,9 @@ class _HomePageState  extends State<HomePage> {
                 if (text.trim().isNotEmpty) {
                   //Provider.of<NavigationService>(context, listen: false).goProcrastination();
                   print("Sendprompt");
-                  await _chatService.fetchPromptResponse(text);
+                  await _buddyService.fetchPromptResponse(text);
                   setState(() {
-                    buddyMessage = _chatService.tmp;  // 更新Buddy的對話內容
+                    buddyMessage = _buddyService.tmp;  // 更新Buddy的對話內容
                   });  
                   _controller.clear();
                 } else {
