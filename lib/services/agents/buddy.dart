@@ -6,12 +6,36 @@ class BuddyService extends AgentService {
   BuddyService() : super();
   String tmp = '';
 
+  List<Map<String, Object>> buddyTools = [
+    {
+      "type": "function",
+      "function": {
+        "name": "change_agent",
+        "description": "Change the agent to bruno when user wants to do meditations or see bruno. Otherwise Change the agent to bizy when user needs advice for procrastination or see bizy.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name" : {
+              "type": "string",
+              "description": "The name of the agent to change to.",
+              "enum": ["bruno", "bizy"],
+            }
+          },
+          "required": ["name"],
+          "additionalProperties": false,
+        },
+        "strict": true
+      }
+    },
+  ];
+
   @override
   Future<String> createAssistant() async {
     final body = jsonEncode({
       'instructions': "Your name is Buddy.",
       'name': "Buddy",
       'model': "gpt-4o-mini",
+      'tools': buddyTools,
     });
 
     final response = await http.post(
@@ -29,7 +53,7 @@ class BuddyService extends AgentService {
     }
   }
 
-  Future<void> fetchPromptResponse(String prompt) async {
+  Future<String> fetchPromptResponse(String prompt) async {
     
     // 1. Post prompt to the thread
     var promptResponse = await http.post(
@@ -60,7 +84,7 @@ class BuddyService extends AgentService {
     }
     
     // 3. Wait for the run to complete
-    var runData = json.decode(runResponse.body);
+    var runData = jsonDecode(runResponse.body);
     var runId = runData['id'];
     String runStatusUrl = '$baseUrl/threads/$threadId/runs/$runId';
     while (true) {
@@ -85,6 +109,8 @@ class BuddyService extends AgentService {
       // Indicate that Function Calling is used (see: https://platform.openai.com/docs/assistants/tools/function-calling)
       if (runStatus == 'requires_action') {
         var toolCallID = runStatusData['required_action']['submit_tool_outputs']['tool_calls'][0]['id'];
+        print(jsonDecode(runStatusData['required_action']['submit_tool_outputs']['tool_calls'][0]['function']['arguments'])['name']);
+        tmp = jsonDecode(runStatusData['required_action']['submit_tool_outputs']['tool_calls'][0]['function']['arguments'])['name'];
         final _submitUrl = 'https://api.openai.com/v1/threads/$threadId/runs/$runId/submit_tool_outputs'; 
         var submitResponse = await http.post(
           Uri.parse(_submitUrl),
@@ -93,11 +119,12 @@ class BuddyService extends AgentService {
             'tool_outputs': [
               {
                 'tool_call_id': toolCallID,
-                'output': 'bad',
+                'output': "See you later!"
               },
             ],
           }),
         );
+        return tmp;
       }
       if (runStatus == 'completed') {
         break;
@@ -118,5 +145,7 @@ class BuddyService extends AgentService {
     var responseData = json.decode(utf8.decode(response.bodyBytes));
     print(responseData['data'][0]['content'][0]['text']['value']);
     tmp = responseData['data'][0]['content'][0]['text']['value'];
+
+    return tmp;
   }
 }

@@ -50,9 +50,15 @@ class _HomePageState  extends State<HomePage> {
                 if (text.trim().isNotEmpty) {
                   //Provider.of<NavigationService>(context, listen: false).goProcrastination();
                   print("Sendprompt");
-                  await _buddyService.fetchPromptResponse(text);
+                  var response = await _buddyService.fetchPromptResponse(text);
+                  if(response == "bruno"){
+                    Provider.of<NavigationService>(context, listen: false).goMeditation();
+                  }
+                  else if(_buddyService.tmp == "bizy"){
+                    Provider.of<NavigationService>(context, listen: false).goProcrastination();
+                  }
                   setState(() {
-                    buddyMessage = _buddyService.tmp;  // 更新Buddy的對話內容
+                    buddyMessage = response;  // 更新Buddy的對話內容
                   });  
                   _controller.clear();
                 } else {
