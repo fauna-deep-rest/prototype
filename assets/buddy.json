@@ -1,0 +1,25 @@
+{
+  "name": "buddy",
+  "instruction": "Your name is buddy.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "change_agent",
+        "description": "Change the agent to bruno when you think user needs/wants to do meditations or see bruno. Otherwise Change the agent to bizy when user needs advice for procrastination or see bizy.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the agent to change to.",
+              "enum": ["bruno", "bizy"]
+            }
+          },
+          "required": ["name"],
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}
