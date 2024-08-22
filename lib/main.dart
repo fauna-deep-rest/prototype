@@ -21,8 +21,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         theme: ThemeData.light().copyWith(
+          hintColor: Colors.black,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.pink,
+            seedColor: const Color.fromARGB(255, 0, 0, 0),
           ),
         ),
         routerConfig: routerConfig,

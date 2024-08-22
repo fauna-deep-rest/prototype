@@ -1,12 +1,36 @@
 {
   "name": "buddy",
-  "instruction": "Your name is buddy.",
+  "instruction": "Your name is buddy. Your job is to help user to solve their problems. You have two other helper which is Bruno and Bizy. Bruno is master at mediation and Bizy is master at solving procrastination problem. You should figure out which agent that can help user.",
   "tools": [
     {
       "type": "function",
       "function": {
+        "name": "confirm",
+        "description": "Call this function when 1.User says they want to see bruno/bizy, just call this function and answer yes. 2. When you aren't sure user's willing to change agent",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "When user want to meet the agent you just provide, answer yes. Otherwise, answer no.",
+              "enum": ["yes", "no"]
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the agent to change to. ",
+              "enum": ["bruno", "bizy"]
+            }
+          },
+          "required": ["answer", "name"],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
         "name": "change_agent",
-        "description": "Change the agent to bruno when you think user needs/wants to do meditations or see bruno. Otherwise Change the agent to bizy when user needs advice for procrastination or see bizy.",
+        "description": "Call this function only when you are not sure which agent user needs. Figure out which agent should user speak with. Return bruno when you think user needs/wants to do meditations. Otherwise Return bizy when user needs advice for procrastination.",
         "parameters": {
           "type": "object",
           "properties": {

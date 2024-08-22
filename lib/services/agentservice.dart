@@ -5,7 +5,7 @@ import 'package:fauna_prototype/models/agent_data.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 abstract class AgentService {
-  static const _apiKey = '';
+  static const _apiKey = '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';
   static const String _baseUrl = 'https://api.openai.com/v1';
 
   late String _assistantId;
@@ -32,24 +32,7 @@ abstract class AgentService {
     return AgentData.fromJson(data);
   }
 
-  // Future<void> _initializeAsync() async {
-  //   try {
-  //     _threadId = await createThread();
-  //       _assistantId = await createAssistant();
-  //       print("threadId: " + _threadId);
-  //       print("assistantId: " + _assistantId);
-  //     _runsUrl = '$_baseUrl/threads/$_threadId/runs';
-  //     _messagesUrl = '$_baseUrl/threads/$_threadId/messages';
-  //     print("Finished initializing");
-  //   } catch (e) {
-  //     print('Error initializing AgentService: $e');
-  //   }
-
-  // }
-
   Future<void> _initializeAsync(String name) async {
-    print("intializing AgentService");
-
     AgentData agentdata =  await loadAgentData(name);
     try {
       _threadId = html.window.localStorage['threadId'] ?? '';
@@ -67,12 +50,39 @@ abstract class AgentService {
       print("assistantId: " + _assistantId);
       _runsUrl = '$_baseUrl/threads/$_threadId/runs';
       _messagesUrl = '$_baseUrl/threads/$_threadId/messages';
-
       print("Finished initializing");
     } catch (e) {
       print('Error initializing AgentService: $e');
     }
+
   }
+
+  // Future<void> _initializeAsync(String name) async {
+  //   print("intializing AgentService");
+
+  //   AgentData agentdata =  await loadAgentData(name);
+  //   try {
+  //     _threadId = html.window.localStorage['threadId'] ?? '';
+  //     _assistantId = html.window.localStorage['assistantId_$name'] ?? '';
+
+  //     if (_threadId.isEmpty || _assistantId.isEmpty) {
+  //       // Thread and assistant not found, create new ones
+  //       _threadId = await createThread();
+  //       _assistantId = await createAssistant(name, agentdata.instruction, agentdata.tools);
+  //       html.window.localStorage['threadId'] = _threadId;
+  //       html.window.localStorage['assistantId_$name'] = _assistantId;
+  //     }
+
+  //     print("threadId: " + _threadId);
+  //     print("assistantId: " + _assistantId);
+  //     _runsUrl = '$_baseUrl/threads/$_threadId/runs';
+  //     _messagesUrl = '$_baseUrl/threads/$_threadId/messages';
+
+  //     print("Finished initializing");
+  //   } catch (e) {
+  //     print('Error initializing AgentService: $e');
+  //   }
+  // }
 
   Future<String> createThread() async {
     final response = await http.post(
@@ -187,10 +197,12 @@ abstract class AgentService {
           runStatus == 'expired') {
         throw Exception('Run failed: ${runStatusData['status']}');
       }
-      // Indicate that Function Calling is used (see: https://platform.openai.com/docs/assistants/tools/function-calling)
+
       if (runStatus == 'requires_action') {
+        print('requires_action');
         var actionResponse = await functionCallAction(runStatusData, _threadId, _runId);
-        if(actionResponse != 'No action required') return actionResponse;
+        if(actionResponse.toLowerCase() == 'bruno' || actionResponse.toLowerCase() == 'bizy') 
+          return actionResponse;
       }
       if (runStatus == 'completed') {
         break;
