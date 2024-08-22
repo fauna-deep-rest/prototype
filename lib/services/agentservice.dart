@@ -5,7 +5,7 @@ import 'package:fauna_prototype/models/agent_data.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 abstract class AgentService {
-  static const _apiKey = 'sk-Ge2aS91XJ3ldGU8h6oq3lj8ZKFoKgXrT27ci7UehNLT3BlbkFJ3v79jj2DF5zPIK62YeCqOOtzTSO_qxnaq9oawQFqUA';
+  static const _apiKey = '';
   static const String _baseUrl = 'https://api.openai.com/v1';
 
   late String _assistantId;
@@ -53,14 +53,14 @@ abstract class AgentService {
     AgentData agentdata =  await loadAgentData(name);
     try {
       _threadId = html.window.localStorage['threadId'] ?? '';
-      _assistantId = html.window.localStorage['assistantId'] ?? '';
+      _assistantId = html.window.localStorage['assistantId_$name'] ?? '';
 
       if (_threadId.isEmpty || _assistantId.isEmpty) {
         // Thread and assistant not found, create new ones
         _threadId = await createThread();
         _assistantId = await createAssistant(name, agentdata.instruction, agentdata.tools);
         html.window.localStorage['threadId'] = _threadId;
-        html.window.localStorage['assistantId'] = _assistantId;
+        html.window.localStorage['assistantId_$name'] = _assistantId;
       }
 
       print("threadId: " + _threadId);

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 class MedPage extends StatelessWidget {
   MedPage({super.key});
   final TextEditingController _controller = TextEditingController();
+  final Image brunoImage = const Image(image: AssetImage('assets/images/bruno.png'));
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +19,31 @@ class MedPage extends StatelessWidget {
           },
         ),
       ),
+      backgroundColor: const Color.fromARGB(255, 42, 58, 47),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Center(child: Text('Bruno', style: TextStyle(fontSize: 50))),
+          SizedBox(height: 500, child: brunoImage),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _controller,
+              style: const TextStyle(color: Colors.white),
+              cursorColor: Colors.white,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                
+                fillColor: Color.fromARGB(255, 62, 78, 67),
+                filled: true,
                 labelText: 'Please enter prompt',
+                labelStyle: TextStyle(color: Colors.grey),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
               ),
               onSubmitted: (text) {
                 if (text.trim().isNotEmpty) {

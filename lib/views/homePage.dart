@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fauna_prototype/services/navigation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:fauna_prototype/services/agents/buddy.dart';
+
 //import 'package:fauna_prototype/services/chatservice.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,15 +18,15 @@ class _HomePageState  extends State<HomePage> {
   final BuddyService _buddyService = BuddyService("buddy");
   String buddyMessage = 'Hi';
 
+  final Image buddyImage = const Image(image: AssetImage('assets/images/buddy.png'));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 30, 30, 30),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Center(child: Text('Buddy', style: TextStyle(fontSize: 50))),
-          const SizedBox(height: 20),
-          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
@@ -37,13 +39,31 @@ class _HomePageState  extends State<HomePage> {
           ),
           const SizedBox(height: 20),
 
+          SizedBox(height: 100, child: buddyImage),
+          const SizedBox(height: 20),
+          
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: TextField(
               controller: _controller,
+              style: const TextStyle(color: Colors.white),
+              cursorColor: Colors.white,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                
+                fillColor: Color.fromARGB(255, 50, 50, 50),
+                filled: true,
                 labelText: 'Please enter prompt',
+                labelStyle: TextStyle(color: Colors.grey),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+
+
               ),
               onSubmitted: (text) async {
                 if (text.trim().isNotEmpty) {
