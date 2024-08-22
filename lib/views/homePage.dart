@@ -42,22 +42,31 @@ class _HomePageState  extends State<HomePage> {
             child: TextField(
               controller: _controller,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white), 
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
                 labelText: 'Please enter prompt',
               ),
               onSubmitted: (text) async {
                 if (text.trim().isNotEmpty) {
-                  //Provider.of<NavigationService>(context, listen: false).goProcrastination();
                   print("Sendprompt");
                   var response = await _buddyService.fetchPromptResponse(text);
-                  if(response == "bruno"){
+                  if(response.toLowerCase() == "bruno"){
+                    setState(() {
+                      buddyMessage = "Let's go to see bruno!";
+                    });
+                    await Future.delayed(const Duration(seconds: 2));
                     Provider.of<NavigationService>(context, listen: false).goMeditation();
                   }
                   else if(_buddyService.tmp == "bizy"){
+                    setState(() {
+                      buddyMessage = "Let's go to see bizy!";
+                    });
+                    await Future.delayed(const Duration(seconds: 2));
                     Provider.of<NavigationService>(context, listen: false).goProcrastination();
                   }
                   setState(() {
-                    buddyMessage = response;  // 更新Buddy的對話內容
+                    buddyMessage = response;
                   });  
                   _controller.clear();
                 } else {
